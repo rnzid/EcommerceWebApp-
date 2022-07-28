@@ -1,4 +1,4 @@
-const signup = (req,res,next)=>{
+const signup = async (req,res,next)=>{
     const { name,email, password,role, ...rest } = req.body
     /* console.log("password",password);
     console.log("Name",name); */
