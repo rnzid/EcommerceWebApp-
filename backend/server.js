@@ -1,11 +1,27 @@
-const express = require('express')
+const express = require('express');
+const router = require('./routes/user');
+const mongoose = require("mongoose");
 const app = express();
 require('dotenv').config()
-//console.log(process.env.PORT) // remove this after you've confirmed it working
+const users_route=require('./routes/user')
+const products_route=require('./routes/product')
 
-app.get("",(req,res,next)=>{
-    res.send({})
-})
+mongoose.connect('mongodb://localhost:27017/ecommerce')
+    .then(res => {
+        console.log("mongodb connencted")
+    })
+    .catch(err => {
+        console.log(err.message)
+    })
+
+
+app.use("/api",users_route)
+app.use("/api",products_route)
+
+
+  
+//app.get("/",(req,res)=>{res.send("aaa")})
+//app.post("/api/signup",()=>{})
 
 app.listen(process.env.PORT,(data,err)=>{
     if(err){
