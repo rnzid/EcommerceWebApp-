@@ -7,6 +7,10 @@ app.get("",(req,res,next)=>{
     res.send({})
 })
 
-app.listen(process.env.PORT,()=>{
-    console.log("starting...");
+app.listen(process.env.PORT,(data,err)=>{
+    if(err){
+        console.log(err)
+    }else{
+        console.log("starting...");
+    }
    });
