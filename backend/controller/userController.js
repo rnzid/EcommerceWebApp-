@@ -1,4 +1,8 @@
+const User = require('../model/User')
+const bcrypt = require('bcrypt');
+
 const signup = async (req,res,next)=>{
+
     const { name,email, password,role, ...rest } = req.body
     /* console.log("password",password);
     console.log("Name",name); */
@@ -7,14 +11,14 @@ const signup = async (req,res,next)=>{
       //console.log("key",hashed);
       try {
  
-         let user = await User.create({
+          let user = await User.create({
             name,  
             email,
             password:hashed,
             role 
          })
          
-         res.send({ data: user })
+         res.send({ data: user } ) 
         
      }
      catch (err) {

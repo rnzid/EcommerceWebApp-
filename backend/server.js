@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost:27017/ecommerce')
         console.log(err.message)
     })
 
-
+app.use(express.json())
 app.use("/api",users_route)
 app.use("/api",products_route)
 
