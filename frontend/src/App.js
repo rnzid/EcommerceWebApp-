@@ -1,8 +1,8 @@
 import { Routes,Route } from 'react-router-dom';
-import Home from './Components/Home';
-import Login from './Components/Login';
-import Signup from './Components/Signup';
-import Header from './Parts/Header';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Header from './Components/Header';
 import { Fragment } from 'react';
 import './App.css';
 
