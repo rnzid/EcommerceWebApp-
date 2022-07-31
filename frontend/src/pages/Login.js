@@ -1,21 +1,59 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate,Link } from "react-router-dom";
 
 const Login = () => {
+    const navigate = useNavigate();
+  const [state, setState] = useState({});
+
+  const handleChange = (e) => {
+    //console.log(e.target);
+    // const name = e.target.name;
+    // const value = e.target.value;
+    const { name, value } = e.target;
+    //console.log(name,value);
+    setState((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+  const PostData = async (e) => {
+    e.preventDefault();
+    const { email, password } = state;
+
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password
+      }),
+    });
+    const data = await res.json();
+    if (data.statusCode === 422 || !data) {
+      window.alert(data.message);
+      console.log("fail reg");
+    } else {
+      navigate("/");
+      window.alert("LoginIn");
+      console.log("sucess reg");
+    }
+  };
+
   return (
     <div className="container">
         <div className="row">
             <div className="col-md-4 offset-md-4">
                 <div className="login-form bg-light mt-4 p-4">
-                    <form action="" method="" className="row g-3">
+                    <form method="POST" className="row g-3">
                         <h4>Login Page</h4>
                         <div className="col-12">
                             <label>Email</label>
-                            <input type="text" name="Email" className="form-control" placeholder="Email"/>
+                            <input type="text" name="email" onChange={handleChange} className="form-control" placeholder="Email"/>
                         </div>
                         <div className="col-12">
                             <label>Password</label>
-                            <input type="password" name="password" className="form-control" placeholder="Password"/>
+                            <input type="password" name="password" onChange={handleChange} className="form-control" placeholder="Password"/>
                         </div>
                         <div className="col-12">
                             <div className="form-check">
@@ -24,7 +62,7 @@ const Login = () => {
                             </div>
                         </div>
                         <div className="col-12">
-                            <button type="submit" className="btn btn-dark float-center">Login</button>
+                            <button type="submit" className="btn btn-dark float-center" onClick={PostData}>Login</button>
                         </div>
                     </form>
                     <hr className="mt-4"/>
