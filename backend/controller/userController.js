@@ -25,16 +25,16 @@ const signup = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password, ...rest } = req.body;
-  console.log(email);
+  //console.log(email);
   const user = await User.findOne({ email }).select("password");
   let status = await bcrypt.compare(password, user?.password || "");
   if (!user || !status) {
-    res.send({ msg: "Invalid Credentias" });
+    return res.send({statusCode:422 });
   }
   //console.log({ user });
   //let userss = await User.findOne({ email })
   res.send({
-    access_token : jwt.sign(user.toObject(), 'shhhhh')
+    access_token : jwt.sign(user.toObject(), 'ssss')
   });
 };
 

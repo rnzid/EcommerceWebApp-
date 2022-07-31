@@ -31,7 +31,7 @@ const Login = () => {
     });
     const data = await res.json();
     if (data.statusCode === 422 || !data) {
-      window.alert(data.message);
+      window.alert("invalid user or password");
       console.log("fail reg");
     } else {
       navigate("/");
