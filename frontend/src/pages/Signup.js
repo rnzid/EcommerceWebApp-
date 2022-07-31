@@ -33,8 +33,8 @@ const Signup = () => {
       }),
     });
     const data = await res.json();
-    if (data.status === 422 || !data) {
-      window.alert("invalid registration");
+    if (data.statusCode === 422 || !data) {
+      window.alert(data.message);
       console.log("fail reg");
     } else {
       navigate("/login");
@@ -115,6 +115,8 @@ const Signup = () => {
                           <div className="form-outline flex-fill mb-0">
                             <input
                               type="password"
+                              // name="cPassword"
+                              // onChange={handleChange}
                               className="form-control"
                               placeholder="Repeat your password"
                             />
