@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate,Link } from "react-router-dom";
 
+
 const Login = () => {
     const navigate = useNavigate();
   const [state, setState] = useState({});
@@ -34,11 +35,14 @@ const Login = () => {
       window.alert("invalid user or password");
       console.log("fail reg");
     } else {
+      console.log(data);
+      localStorage.setItem("access_token",data.access_token)
       navigate("/");
       window.alert("LoginIn");
       console.log("sucess reg");
     }
   };
+
 
   return (
     <div className="container">
@@ -49,11 +53,11 @@ const Login = () => {
                         <h4>Login Page</h4>
                         <div className="col-12">
                             <label>Email</label>
-                            <input type="text" name="email" onChange={handleChange} className="form-control" placeholder="Email"/>
+                            <input type="text" name="email" value={state.email} onChange={handleChange} className="form-control" placeholder="Email"/>
                         </div>
                         <div className="col-12">
                             <label>Password</label>
-                            <input type="password" name="password" onChange={handleChange} className="form-control" placeholder="Password"/>
+                            <input type="password" name="password" value={state.password} onChange={handleChange} className="form-control" placeholder="Password"/>
                         </div>
                         <div className="col-12">
                             <div className="form-check">
