@@ -4,26 +4,24 @@ import {
     useLocation,
     Link
 } from "react-router-dom";
-
-import { useSelector } from 'react-redux'
-
+import { useDispatch, useSelector } from 'react-redux';
 import { roles } from "../../constants/roles"
+import { addToCart, removeFromCart, clearCart } from '../../redux/reducer/cart';
 
 
 
 export default function Index() {
 
     const { user } = useSelector((state) => state.auth)
-
+    const dispatch = useDispatch()
 
     let location = useLocation();
-
     const [products, setProducts] = useState([]);
 
-    //console.log(location.pathname)
+    console.log(location.pathname)
     // TODO: depending up buyer and seller, fetch allproduct or only seller products
     let url = `${process.env.REACT_APP_SERVER_DOMAIN}/products`
-    if (location.pathname.includes("/sellers/products")) {
+    if (location?.pathname?.includes("/sellers/products")) {
         url = `${process.env.REACT_APP_SERVER_DOMAIN}/products/sellers`
     }
 
@@ -43,74 +41,83 @@ export default function Index() {
             })
     }, []);
 
+
+    function handleAddToCart() {
+        const { _id, name, price } = products
+        dispatch(addToCart({
+          _id, name, price
+        }))
+      }
     return (
         <div className="container mt-5">
-            {
-                                    user.role == roles.SELLER
-                                    &&
-                                    <Link to="/sellers/products/store"><button type="button" class="btn btn-primary">Add Product</button></Link>
-                                }
             <div className="row mt-5">
                 {
-                products.map(el => {
+                    products.length == 0
+                    &&
+                    <p>There ar no any products</p>
 
-                    let blob;
-                    let image = ""
-                    if (el.images[0]?.buffer?.data) {
-                        blob = new Blob([Int8Array.from(el.images[0]?.buffer?.data)], { type: el.images[0]?.mimetype });
-                        image = window.URL.createObjectURL(blob);
-                    }
+                }
+                {
+                    user.role == roles.SELLER
+                    &&
+                    <Link to="/sellers/products/store">
+                        <button className='btn btn-primary'> create product</button>
+                    </Link>
+                }
+                {
+                    products.map(el => {
 
-                    return <div className="col-3 p-2">
-                        <div className="card">
-                            <Link to={`/products/${el._id}`}>
-                                <img src={image} className="card-img-top" alt={el.name} />
-                            </Link>
-                            <div className="card-body">
-                                <h5 className="card-title">{el.name}</h5>
-                                <p className="card-text">{el.description}</p>
-                                {
-                                    user.role == roles.BUYER
-                                    &&
-                                    <a href="#" className="btn btn-primary">Add to Cart</a>
-                                }
-                                {
-                                    user.role == roles.SELLER
-                                    &&
-                                    location.pathname.includes("/sellers/products")
-                                    &&
-                                    <Link to={`/sellers/products/edit/${el._id}`}>
-                                        <button type="button" className="btn btn-primary">Edit</button>
-                                    </Link>
-                                }
-                                 {
-                                    user.role == roles.SELLER
-                                    &&
-                                    location.pathname.includes("/sellers/products")
-                                    &&
-                                    <Link to={`/sellers/products/edit/${el._id}`}>
-                                        <button type="button" className="btn btn-danger" >Delete</button>
-                                    </Link>
-                                }
+                        let blob;
+                        let image = ""
+                        if (el.images[0]?.buffer?.data) {
+                            blob = new Blob([Int8Array.from(el.images[0]?.buffer?.data)], { type: el.images[0]?.mimetype });
+                            image = window.URL.createObjectURL(blob);
+                        }
+
+                        return <div class="col-3 p-2">
+                            <div class="card">
+                                <Link to={`/products/${el._id}`}>
+                                    <img src={image} class="card-img-top" alt={el.name} />
+                                </Link>
+                                <div class="card-body">
+                                    <h5 class="card-title">{el.name}</h5>
+                                    <p class="card-text">{el.description}</p>
+                                    {
+                                        user.role == roles.BUYER
+                                        &&
+                                        <button type='button' className='btn btn-primary' onClick={handleAddToCart}>Add to Cart</button>
+                                    }
+                                    {
+                                        user.role == roles.SELLER
+                                        &&
+                                        location?.pathname?.includes("/sellers/products")
+                                        &&
+                                        <Link to={`/sellers/products/edit/${el._id}`}>
+                                            <button type="button" class="btn btn-primary">Edit</button>
+                                            {/* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            Edit
+                                        </button> */}
+                                        </Link>
+                                    }
+                                </div>
                             </div>
-                        </div>
 
-                    </div>
-                })}
-            </div>
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div className="modal-body">
+                    })}
+            </div>
+            <div class="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
                             ...
                         </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Save changes</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>

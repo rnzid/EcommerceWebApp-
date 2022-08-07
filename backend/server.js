@@ -6,6 +6,7 @@ const cors = require("cors");
 require('dotenv').config()
 const users_route=require('./routes/user')
 const products_route=require('./routes/product')
+const orders_route = require('./routes/order');
 
 app.use(cors()) // handle cross origin resource sharing 
 // app.use(cors({options for specific domain and ports})) // handle cross origin resource sharing
@@ -21,6 +22,7 @@ mongoose.connect('mongodb://localhost:27017/ecommerce')
 app.use(express.json())
 app.use("/api",users_route)
 app.use("/api/products",products_route)
+app.use("/api/orders", orders_route)
 
 
 /* handle errors */
