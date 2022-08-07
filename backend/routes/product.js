@@ -1,8 +1,18 @@
 const express = require('express')
-const product = require('../controller/productController')
+const { index, sellerIndex, show, store, update, deleteProduct, updateReview } = require('../controller/productController')
 const router = express.Router()
-const auth= require("../middleware/auth")
 
-router.post("/products",auth,product)
 
-module.exports=router
+const multer_arr_upload = require("../middleware/multer")
+const { validateAccessToken } = require('../middleware/auth')
+
+
+router.get("", index)
+router.get("/sellers", validateAccessToken, sellerIndex)
+router.get("/:id", show)
+router.post("/", validateAccessToken, multer_arr_upload, store)
+router.put("/:id", validateAccessToken, multer_arr_upload, update)
+router.put("/review/:id",  updateReview)
+router.delete("/:id", validateAccessToken, deleteProduct)
+
+module.exports = router

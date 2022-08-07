@@ -1,4 +1,4 @@
-export const role={
+export const roles={
     BUYER:"buyer",
     SELLER:"seller"
 }

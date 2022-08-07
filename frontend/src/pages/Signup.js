@@ -1,10 +1,26 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { roles } from "../constants/roles";
+import ErrorMessage from "../Components/ErrorMessage";
 
 const Signup = () => {
-  const navigate = useNavigate();
-  const [state, setState] = useState({});
+  let navigate = useNavigate();
+
+  const [validation_errors, setValidationErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "",
+  });
+
+  // store to localstorage and to redux store
+  const [state, setState] = useState({
+    name: "test",
+    email: "test@test.com",
+    password: "password",
+    role: "buyer",
+  });
 
   const handleChange = (e) => {
     //console.log(e.target);
@@ -20,30 +36,25 @@ const Signup = () => {
   const PostData = async (e) => {
     e.preventDefault();
     const { name, email, password, role } = state;
-
-    const res = await fetch("/api/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        role
-      }),
-    });
-    const data = await res.json();
-    if (data.statusCode === 422 || !data) {
-      window.alert(data.message);
-      console.log("fail reg");
-    } else {
-      navigate("/login");
-      window.alert("sucess registration");
-      console.log("sucess reg");
-    }
+    let data = { name, email, password, role };
+    let url = `${process.env.REACT_APP_SERVER_DOMAIN}/signup`;
+    axios
+      .post(url, data)
+      .then(res => {
+        navigate("/login");
+      })
+      .catch((err) => {
+        let mapped_errors = err.response.data.errors.map((el) => {
+          return { [el.param]: el.msg };
+        });
+        setValidationErrors(Object.assign({}, ...mapped_errors));
+      });
   };
 
+  let roles_arr = Object.entries(roles);
+  let roles_mapping = roles_arr.map((el) => {
+    return <option value={el[1]}>{el[0]}</option>;
+  });
   console.log(state);
   return (
     <div>
@@ -61,7 +72,10 @@ const Signup = () => {
 
                       <form className="mx-1 mx-md-4" method="POST">
                         <div className="d-flex flex-row align-items-center mb-4">
-                          <i className="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <i
+                            htmlFor="name"
+                            className="fas fa-user fa-lg me-3 fa-fw"
+                          ></i>
                           <div className="form-outline flex-fill mb-0">
                             <input
                               type="text"
@@ -73,7 +87,7 @@ const Signup = () => {
                             />
                           </div>
                         </div>
-
+                        <ErrorMessage message={validation_errors.name} />
                         <div className="d-flex flex-row align-items-center mb-4">
                           <i className="fas fa-envelope fa-lg me-3 fa-fw"></i>
                           <div className="form-outline flex-fill mb-0">
@@ -87,15 +101,19 @@ const Signup = () => {
                             />
                           </div>
                         </div>
+                        <ErrorMessage message={validation_errors.email} />
                         <div className="d-flex flex-row align-items-center mb-4">
                           <i className="fa-solid fa-user fa-lg me-3 fa-fw"></i>
                           <div className="form-outline flex-fill mb-0">
-                            <select name="role" onChange={handleChange} className="form-control">
-                            <option value="None">select-one-role</option>
-                              <option value="buyer">buyer</option>
-                              <option value="seller">seller</option>
+                            <select
+                              name="role"
+                              className="form-control"
+                              onChange={handleChange}
+                            >
+                              {roles_mapping}
                             </select>
                           </div>
+                          <ErrorMessage message={validation_errors.role} />
                         </div>
 
                         <div className="d-flex flex-row align-items-center mb-4">
@@ -110,7 +128,7 @@ const Signup = () => {
                             />
                           </div>
                         </div>
-
+                        <ErrorMessage message={validation_errors.password} />
                         <div className="d-flex flex-row align-items-center mb-4">
                           <i className="fas fa-key fa-lg me-3 fa-fw"></i>
                           <div className="form-outline flex-fill mb-0">
@@ -123,7 +141,7 @@ const Signup = () => {
                             />
                           </div>
                         </div>
-
+                        <ErrorMessage message={validation_errors.password} />
                         <div className="form-check d-flex justify-content-center mb-5">
                           <input
                             className="form-check-input me-2"

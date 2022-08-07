@@ -1,73 +1,116 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { roles } from "../constants/roles";
 
 //import { Navigate } from 'react-router-dom';
 
-const Header = () => {
-  const token = localStorage.getItem("access_token");
-  //console.log(token);
-  //const logstat=()=>{}
-  let loggedin = true;
-  if (token == null) {
-    loggedin = false;
+export default function Navbar() {
+  const { user, is_logged_in } = useSelector((state) => state.auth);
+
+  let { pathname } = useLocation();
+
+  if (pathname == "/login" || pathname == "/signup") {
+    return null;
   }
 
   return (
-    <div>
-      {" "}
-      <nav className="navbar navbar-expand-lg navbar navbar-dark bg-dark">
+    <>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
-            Navbar
-          </Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              {user.role == roles.SELLER && (
+                <>
+                  <li className="nav-item">
+                    <NavLink
+                      to="sellers/dashboard"
+                      className="nav-link"
+                      style={({ isActive }) =>
+                        isActive ? { fontWeight: "700" } : undefined
+                      }
+                    >
+                      Dashboard
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink
+                      to="sellers/products"
+                      className="nav-link"
+                      style={({ isActive }) =>
+                        isActive ? { fontWeight: "700" } : undefined
+                      }
+                    >
+                      Warehouse/Store
+                    </NavLink>
+                  </li>
+                </>
+              )}
+              <li className="nav-item">
+                <NavLink
+                  to="products"
+                  className="nav-link"
+                  style={({ isActive }) =>
+                    isActive ? { fontWeight: "700" } : undefined
+                  }
+                >
+                  Products
+                </NavLink>
+              </li>
               <li className="nav-item me-2 text-white bg-dark">
                 <Link to="/">Home</Link>
               </li>
               <li className="nav-item me-2">
                 <Link to="About">About</Link>
               </li>
-              <li className="nav-item  me-2 text-white bg-dark">
-                <Link to="Product">Product</Link>
-              </li>
-            </ul>
-            <form className="d-flex">
-              {/* <input
-            className="form-control me-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          /> */}
-              {loggedin ? (
-                <button className="btn btn-outline-success me-2" type="submit">
-                  <Link to="logout">Logout</Link>
-                </button>
-              ) : (
-                <button className="btn btn-outline-success me-2" type="submit">
-                  <Link to="login">login</Link>
-                </button>
+              {user.role == roles.BUYER && (
+                <>
+                  <li className="nav-item">
+                    <NavLink
+                      to="orders"
+                      className="nav-link"
+                      style={({ isActive }) =>
+                        isActive ? { fontWeight: "700" } : undefined
+                      }
+                    >
+                      Orders
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink
+                      to="checkout"
+                      className="nav-link"
+                      style={({ isActive }) =>
+                        isActive ? { fontWeight: "700" } : undefined
+                      }
+                    >
+                      Checkout
+                    </NavLink>
+                  </li>
+                </>
               )}
-              <button className="btn btn-outline-success me-2" type="submit">
-                <Link to="signup">Signup</Link>
-              </button>
-            </form>
+            </ul>
+            {
+              // pathname.includes("/products")
+              // &&
+              // <form className="d-flex" role="search">
+              //     <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+              //     <button className="btn btn-outline-success" type="submit">Search</button>
+              // </form>
+            }
+            {
+              <div>
+                <p className="text-capitalize mb-0">
+                  <strong>{user.name}</strong>
+                </p>
+                <p className="mb-0">{user.email}</p>
+              </div>
+            }
+            {!is_logged_in && <Link to="/login">login</Link>}
           </div>
         </div>
       </nav>
-    </div>
+    </>
   );
-};
-
-export default Header;
+}
