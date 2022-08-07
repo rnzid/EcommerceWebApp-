@@ -81,9 +81,15 @@ export default function Index() {
                                     &&
                                     <Link to={`/sellers/products/edit/${el._id}`}>
                                         <button type="button" className="btn btn-primary">Edit</button>
-                                         <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                            Edit
-                                        </button> 
+                                    </Link>
+                                }
+                                 {
+                                    user.role == roles.SELLER
+                                    &&
+                                    location.pathname.includes("/sellers/products")
+                                    &&
+                                    <Link to={`/sellers/products/edit/${el._id}`}>
+                                        <button type="button" className="btn btn-danger" >Delete</button>
                                     </Link>
                                 }
                             </div>

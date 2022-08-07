@@ -32,12 +32,11 @@ const Login = () => {
       return { ...prev, [name]: value };
     });
   };
-
   const PostData = async (e) => {
     e.preventDefault();
     console.log(process.env.REACT_APP_SERVER_DOMAIN);
     const { email, password,roles } = state;
-    console.log({roles});
+    //console.log({roles});
     let data = { email, password, roles };
     let url = `${process.env.REACT_APP_SERVER_DOMAIN}/login`;
 
@@ -48,7 +47,9 @@ const Login = () => {
         localStorage.setItem("access_token", res.data.access_token);
 
         dispatch(login());
-        navigate("/");
+        
+          navigate("/");
+        
       })
       .catch((err) => {
         setLoading(false);

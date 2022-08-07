@@ -30,7 +30,6 @@ export default function Show() {
   }, [])
 
   function handleAddToCart() {
-
     const { _id, name, price } = product
     dispatch(addToCart({
       _id, name, price

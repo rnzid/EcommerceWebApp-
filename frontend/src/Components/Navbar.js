@@ -58,12 +58,6 @@ export default function Navbar() {
                   Products
                 </NavLink>
               </li>
-              <li className="nav-item me-2 text-white bg-dark">
-                <Link to="/">Home</Link>
-              </li>
-              <li className="nav-item me-2">
-                <Link to="About">About</Link>
-              </li>
               {user.role == roles.BUYER && (
                 <>
                   <li className="nav-item">

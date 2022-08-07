@@ -5,7 +5,6 @@ import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import Signup from "./pages/Signup";
 import Navbar from "./Components/Navbar";
-import About from "./pages/About";
 import { Fragment } from "react";
 import { roles } from "./constants/roles";
 import { useDispatch } from "react-redux";
